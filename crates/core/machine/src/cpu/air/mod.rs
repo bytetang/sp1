@@ -94,19 +94,21 @@ where
         // AUIPC instruction.
         self.eval_auipc(builder, local);
 
-        // ECALL instruction.
-        self.eval_ecall(builder, local);
+        /* TODO: Enable after profiling for the first version.
+                // ECALL instruction.
+                self.eval_ecall(builder, local);
 
-        // COMMIT/COMMIT_DEFERRED_PROOFS ecall instruction.
-        self.eval_commit(
-            builder,
-            local,
-            public_values.committed_value_digest.clone(),
-            public_values.deferred_proofs_digest.clone(),
-        );
+                // COMMIT/COMMIT_DEFERRED_PROOFS ecall instruction.
+                self.eval_commit(
+                    builder,
+                    local,
+                    public_values.committed_value_digest.clone(),
+                    public_values.deferred_proofs_digest.clone(),
+                );
 
-        // HALT ecall and UNIMPL instruction.
-        self.eval_halt_unimpl(builder, local, next, public_values);
+                // HALT ecall and UNIMPL instruction.
+                self.eval_halt_unimpl(builder, local, next, public_values);
+        */
 
         // Check that the shard and clk is updated correctly.
         self.eval_shard_clk(builder, local, next);
@@ -323,11 +325,11 @@ impl CpuChip {
         let is_halt = self.get_is_halt_syscall::<AB>(builder, local);
         builder.when(local.is_real).assert_eq(
             local.is_sequential_instr,
-            AB::Expr::one()
-                - (is_branch_instruction
-                    + local.selectors.is_jal
-                    + local.selectors.is_jalr
-                    + is_halt),
+            AB::Expr::one() -
+                (is_branch_instruction +
+                    local.selectors.is_jal +
+                    local.selectors.is_jalr +
+                    is_halt),
         );
 
         // Verify that the pc increments by 4 for all instructions except branch, jump and halt
