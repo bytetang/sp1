@@ -26,3 +26,5 @@ recursion/gnark-ffi/build
 crates/prover/build
 crates/prover/data
 crates/prover/*.tar.gz
+
+.idea
